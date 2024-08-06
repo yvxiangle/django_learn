@@ -1,0 +1,184 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+  <div class="container">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        表单
+      </div>
+      <div class="panel-body">
+        <form id='formAdd'>
+          <div class="clearfix">
+            {% for field in form %}
+              <div class="col-xs-6">
+                <div class="form-group" style="position: relative; margin-bottom: 25px">
+                  <label>{{ field.label }}</label>
+                  {{ field }}
+                  <span class='error-msg' style="color: red; position: absolute;"></span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <button id='btnAdd' type="button" class="btn btn-primary">提 交</button>
+        </form>
+      </div>
+    </div>
+
+
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+        任务列表
+      </div>
+        <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>级别</th>
+            <th>标题</th>
+            <th>详细信息</th>
+            <th>管理员</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for obj in queryset %}
+          <tr>
+            <th>{{ obj.id }}</th>
+            <th>{{ obj.get_level_display }}</th>
+            <th>{{ obj.title }}</th>
+            <th>{{ obj.detail }}</th>
+            <th>{{ obj.user.username }}</th>
+            <th>
+              <a class="btn btn-primary btn-xs" href="#">编辑</a>
+              <a class="btn btn-danger btn-xs" href="#">删除</a>
+            </th>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="clearfix">
+      <ul class="pagination" style="text-align: center; float: left">
+        {{ page_string }}
+      </ul>
+    </div>
+
+
+
+
+    <div style="height: 1000px"></div>
+    <hr/>
+    <h1>Ajax学习</h1>
+    <h3>示例1</h3>
+    <input id='btn1' type="button" class="btn btn-primary" value="click1"/>
+
+    <h3>示例2</h3>
+    <label for="txtUser">name</label>
+    <input type="text" id="txtUser" placeholder="name" />
+    <label for="txtAge">age</label>
+    <input type="text" id="txtAge" placeholder="age" />
+    <input id="btn2" type="button" class="btn btn-primary" value="click2" />
+
+    <h3>示例3</h3>
+    <form id="form3">
+      <input type="text" name="user" placeholder="name" />
+      <input type="text" name="age" placeholder="age" />
+      <input type="text" name="email" placeholder="email" />
+      <input type="text" name="more" placeholder="more" />
+    </form>
+      <input id="btn3" type="button" class="btn btn-primary" value="click3" />
+  </div>
+
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript">
+    $(function () {
+        {#当页面框架加载完成后会执行以下函数#}
+        bindBtn1Evnet();
+        bindBtn2Evnet();
+        bindBtn3Evnet();
+        bindBtnAddEvnet();
+    })
+
+    function bindBtn1Evnet() {
+        $('#btn1').click(function () {
+            $.ajax({
+                url: '/task/ajax/',
+                type: 'get',
+                data: {
+                    n1:123,
+                    n2:456,
+                },
+                dataType: 'JSON',
+                success: function (res) {
+                    console.log(res);
+                    console.log(res.status);
+                    console.log(res.data);
+                }
+            })
+        })
+    }
+
+    function bindBtn2Evnet() {
+        $('#btn2').click(function () {
+            $.ajax({
+                url: '/task/ajax/',
+                type: 'post',
+                data: {
+                    n1: $("#txtUser").val(),
+                    n2: $("#txtAge").val(),
+                },
+                dataType: 'JSON',
+                success: function (res) {
+                    console.log(res);
+                }
+            })
+        })
+    }
+
+    function bindBtn3Evnet() {
+        $('#btn3').click(function () {
+            $.ajax({
+                url: '/task/ajax/',
+                type: 'post',
+                data: $("#form3").serialize(),
+                dataType: 'JSON',
+                success: function (res) {
+                    console.log(res);
+                }
+            })
+        })
+    }
+
+    function bindBtnAddEvnet() {
+        $('#btnAdd').click(function() {
+          $(".error-msg").empty()
+          $.ajax({
+              url: '/task/add/',
+              type: 'post',
+              data: $('#formAdd').serialize(),
+              dataType: 'JSON',
+              success: function (res) {
+                  if(res.status) {
+                      alert("添加成功");
+                      // 使用 js 实现页面刷新
+                      location.reload();
+                  } else {
+                      console.log(res.error);
+                      $.each(res.error, function (name, data){
+                          console.log(name, data);
+                          $("#id_"+name).next().text(data[0])
+                      })
+                  }
+              }
+          })
+        })
+    }
+
+  </script>
+
+{% endblock %}

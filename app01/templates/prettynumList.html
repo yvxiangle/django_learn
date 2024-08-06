@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+
+prettynum_list
+
+{% endblock %}
+
+{% block content %}
+
+  <div style="margin-bottom: 10px" class="clearfix">
+    <a class="btn btn-success" href="/prettynum/create/">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"> 新建号码</span>
+    </a>
+    <div style="float: right">
+      <form method="GET">
+        <div class="input-group" style="width: 300px">
+          <input type="text" name="query_value" class="form-control" placeholder="Search for..." value="{{ query_value }}">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <span class="glyphicon glyphicon-th-list" aria-hidden="true">
+        号码列表
+      </span>
+    </div>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>号码</th>
+          <th>价格</th>
+          <th>靓号等级</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for obj in prettynum_list %}
+        <tr>
+          <th>{{ obj.id }}</th>
+          <th>{{ obj.mobile }}</th>
+          <th>{{ obj.price }}</th>
+          <th>{{ obj.get_level_display }}</th>
+          <th>{{ obj.get_status_display }}</th>
+          <th>
+            <a class="btn btn-primary btn-xs" href="/prettynum/edit/{{ obj.id }}">编辑</a>
+            <a class="btn btn-danger btn-xs" href="/prettynum/delete/{{ obj.id }}">删除</a>
+          </th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="clearfix">
+    <ul class="pagination" style="text-align: center; float: left">
+      {{ page_string }}
+    </ul>
+  </div>
+
+{% endblock %}
+

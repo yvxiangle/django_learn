@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container">
+
+    <div style="margin-bottom: 10px">
+      <a class="btn btn-success" href="/city/add/">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        新建城市
+      </a>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+        城市列表
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>logo</th>
+            <th>名称</th>
+            <th>人口</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for obj in city_list %}
+          <tr>
+            <td>{{ obj.id }}</td>
+            <td>
+              <img src="/media/{{ obj.logo }}" style="height: 80px;" alt="..."/>
+            </td>
+            <td>{{ obj.name }}</td>
+            <td>{{ obj.count }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="clearfix">
+      <ul class="pagination" style="text-align: center; float: left">
+        {{ page_string }}
+      </ul>
+    </div>
+
+  </div>
+
+
+{% endblock %}
